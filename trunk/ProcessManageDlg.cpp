@@ -93,6 +93,11 @@ BEGIN_MESSAGE_MAP(CProcessManageDlg, CDialog)
 	//ON_COMMAND_RANGE(,,)
 	//}}AFX_MSG_MAP
 	ON_WM_CONTEXTMENU()
+	ON_COMMAND(ID_Process_Terminate, &CProcessManageDlg::OnProcessTerminate)
+	ON_COMMAND(ID_Flush_One, &CProcessManageDlg::OnFlushOne)
+	ON_COMMAND(ID_Process_Pause, &CProcessManageDlg::OnProcessPause)
+	ON_COMMAND(ID_Process_Resume, &CProcessManageDlg::OnProcessResume)
+	ON_COMMAND(ID_ViewModule, &CProcessManageDlg::OnViewmodule)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -281,6 +286,8 @@ int CProcessManageDlg::GetSelectPid()
     return pid;
 }
 
+
+//暂停进程
 void CProcessManageDlg::OnBtnStop() 
 {
 	// TODO: Add your control notification handler code here
@@ -314,7 +321,7 @@ void CProcessManageDlg::OnBtnStop()
     }
 }
 
-
+//关闭进程
 void CProcessManageDlg::OnButtonTerminate() 
 {
 	// TODO: Add your control notification handler code here
@@ -329,6 +336,7 @@ void CProcessManageDlg::OnButtonTerminate()
 	ShowProcess();
 }
 
+//撤销暂停进程
 void CProcessManageDlg::OnButtonResume() 
 {
 	// TODO: Add your control notification handler code here
@@ -369,6 +377,7 @@ void CProcessManageDlg::OnBtnDLL()
 	DLLCheck.DoModal();
 }
 
+//右键菜单实现
 void CProcessManageDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 {
 	// TODO: 在此处添加消息处理程序代码
@@ -395,4 +404,103 @@ void CProcessManageDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 	pPopup->Detach();
 
 	popMenu.DestroyMenu();
+}
+
+//右键关闭进程
+void CProcessManageDlg::OnProcessTerminate()
+{
+	// TODO: 在此添加命令处理程序代码
+	int nPid = GetSelectPid();
+
+	HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, nPid);
+
+	TerminateProcess(hProcess, 0);
+
+	CloseHandle(hProcess);
+
+	ShowProcess();
+}
+
+//右键刷新一下
+void CProcessManageDlg::OnFlushOne()
+{
+	// TODO: 在此添加命令处理程序代码
+	ShowProcess();
+
+}
+
+//右键进程暂停
+void CProcessManageDlg::OnProcessPause()
+{
+	// TODO: 在此添加命令处理程序代码
+	int nPid = -1;
+	nPid = GetSelectPid();
+	//创建线程快照
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, nPid);
+	if ( hSnap == INVALID_HANDLE_VALUE )
+	{
+		AfxMessageBox("暂停进程失败！");
+		return ;
+	}
+
+	THREADENTRY32 Te32 = { 0 };
+	Te32.dwSize = sizeof(THREADENTRY32);
+	BOOL bRet = Thread32First(hSnap, &Te32);
+
+	while ( bRet )
+	{
+		//判断线程所属
+		if ( Te32.th32OwnerProcessID == nPid )
+		{
+			HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, Te32.th32ThreadID);
+
+			SuspendThread(hThread);
+
+			CloseHandle(hThread);
+		}
+
+		bRet = Thread32Next(hSnap, &Te32);
+	}
+}
+
+//右键撤销暂停进程
+void CProcessManageDlg::OnProcessResume()
+{
+	// TODO: 在此添加命令处理程序代码
+	int nPid = -1;
+	nPid = GetSelectPid();
+
+	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, nPid);
+	if ( hSnap == INVALID_HANDLE_VALUE )
+	{
+		AfxMessageBox("进程恢复失败！");
+		return ;
+	}
+
+	THREADENTRY32 Te32 = { 0 };
+	Te32.dwSize = sizeof(THREADENTRY32);
+	BOOL bRet = Thread32First(hSnap, &Te32);
+
+	while ( bRet )
+	{
+		if ( Te32.th32OwnerProcessID == nPid )
+		{
+			HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, Te32.th32ThreadID);
+
+			ResumeThread(hThread);
+
+			CloseHandle(hThread);
+		}
+
+		bRet = Thread32Next(hSnap, &Te32);
+	}	
+}
+
+//右键查看模块
+void CProcessManageDlg::OnViewmodule()
+{
+	// TODO: 在此添加命令处理程序代码
+	pid = GetSelectPid();
+	CDLLCheck DLLCheck;
+	DLLCheck.DoModal();
 }
