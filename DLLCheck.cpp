@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CDLLCheck, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON2, OnBtnDLLQuit)
 	ON_BN_CLICKED(IDC_BUTTON1, OnBtnUnInjectDll)
 	//}}AFX_MSG_MAP
+	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -94,6 +95,8 @@ void CDLLCheck::ShowModule()
     if ( hSnap == INVALID_HANDLE_VALUE )
     {
         AfxMessageBox("创建快照失败！");
+		//创建失败应当退出本窗口
+		CDLLCheck::OnBtnDLLQuit();
         return ;
     }
     
@@ -217,4 +220,27 @@ void CDLLCheck::UnInjectDll(DWORD dwPid, char *szDllName)
     
         CloseHandle(hThread);
         CloseHandle(hProcess);
+}
+
+//右键查看全部路径
+void CDLLCheck::OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/)
+{
+	// TODO: 在此处添加消息处理程序代码
+	//获取列表框中所选中的位置  
+	POSITION Pos = m_CheckDLL.GetFirstSelectedItemPosition();  
+	int nSelect = -1;  
+	while ( Pos )  
+	{  
+		nSelect = m_CheckDLL.GetNextSelectedItem(Pos);  
+	}  
+	//如果在列表框中没有进行选择，则报错      
+	if ( -1 == nSelect )  
+	{  
+		AfxMessageBox("请选择模块！");  
+		return;  
+	}  
+	//获取列表框中DLL的名称      
+	char  szDllPath[MAX_PATH] = { 0 };  
+	m_CheckDLL.GetItemText(nSelect, 2, szDllPath, MAX_PATH);
+	AfxMessageBox(szDllPath);
 }

@@ -51,6 +51,11 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
+	afx_msg void OnProcessTerminate();
+	afx_msg void OnFlushOne();
+	afx_msg void OnProcessPause();
+	afx_msg void OnProcessResume();
+	afx_msg void OnViewmodule();
 };
 
 //{{AFX_INSERT_LOCATION}}

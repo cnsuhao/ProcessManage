@@ -43,6 +43,8 @@ protected:
 	afx_msg void OnBtnUnInjectDll();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
 };
 
 //{{AFX_INSERT_LOCATION}}
