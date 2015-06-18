@@ -90,7 +90,9 @@ BEGIN_MESSAGE_MAP(CProcessManageDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON_TERMINATE, OnButtonTerminate)
 	ON_BN_CLICKED(IDC_BUTTON_RESUME, OnButtonResume)
 	ON_BN_CLICKED(IDC_BUTTON4, OnBtnDLL)
+	//ON_COMMAND_RANGE(,,)
 	//}}AFX_MSG_MAP
+	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -365,4 +367,32 @@ void CProcessManageDlg::OnBtnDLL()
 	pid = GetSelectPid();
 	CDLLCheck DLLCheck;
 	DLLCheck.DoModal();
+}
+
+void CProcessManageDlg::OnContextMenu(CWnd* pWnd, CPoint point)
+{
+	// TODO: 在此处添加消息处理程序代码
+	CMenu popMenu;
+
+	popMenu.LoadMenu(IDR_ProcessRButtonMenu); //载入菜单
+
+	CMenu *pPopup;
+
+	pPopup=popMenu.GetSubMenu(0); //获得子菜单指针
+
+
+
+	//pPopup->EnableMenuItem(ID_H,MF_BYCOMMAND|MF_ENABLED); //允许菜单项使用
+
+	//pPopup->EnableMenuItem(ID_LB001,MF_BYCOMMAND|MF_DISABLED|MF_GRAYED); //不允许菜单项使用
+
+
+
+	//ClientToScreen(&point); //将客户区坐标转换成屏幕坐标
+
+	pPopup->TrackPopupMenu(TPM_LEFTALIGN|TPM_RIGHTBUTTON,point.x,point.y,this); //显示弹出菜单，参数依次为(鼠标在菜单左边|跟踪右键，x，y，this)
+
+	pPopup->Detach();
+
+	popMenu.DestroyMenu();
 }
