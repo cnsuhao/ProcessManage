@@ -56,6 +56,10 @@ public:
 	afx_msg void OnProcessPause();
 	afx_msg void OnProcessResume();
 	afx_msg void OnViewmodule();
+	int TimeM;
+	
+	int CEditA;
+	afx_msg void OnBnClickedButtonautoshutdown();
 };
 
 //{{AFX_INSERT_LOCATION}}
