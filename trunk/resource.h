@@ -18,7 +18,10 @@
 #define IDC_BUTTON1                     1003
 #define IDC_BUTTON4                     1004
 #define IDC_BUTTON2                     1004
+#define IDC_EditShutdownTime            1004
 #define IDC_BUTTON5                     1005
+#define IDC_ButtonAutoShutdown          1006
+#define IDC_EDIT1                       1007
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -62,7 +65,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32807
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
