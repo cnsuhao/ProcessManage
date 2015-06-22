@@ -94,7 +94,7 @@ void CDLLCheck::ShowModule()
     HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, nPid);
     if ( hSnap == INVALID_HANDLE_VALUE )
     {
-        AfxMessageBox("创建快照失败！");
+        AfxMessageBox("再来一瓶！");
 		//创建失败应当退出本窗口
 		CDLLCheck::OnBtnDLLQuit();
         return ;

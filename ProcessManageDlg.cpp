@@ -103,6 +103,7 @@ BEGIN_MESSAGE_MAP(CProcessManageDlg, CDialog)
 	ON_COMMAND(ID_Process_Resume, &CProcessManageDlg::OnProcessResume)
 	ON_COMMAND(ID_ViewModule, &CProcessManageDlg::OnViewmodule)
 	ON_BN_CLICKED(IDC_ButtonAutoShutdown, &CProcessManageDlg::OnBnClickedButtonautoshutdown)
+	ON_COMMAND(ID_NTSDKill_Process, &CProcessManageDlg::OnNtsdkillProcess)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -534,4 +535,27 @@ void CProcessManageDlg::OnBnClickedButtonautoshutdown()
 		AfxMessageBox("时间应该大于60秒");
 
 	}	
+}
+
+
+void CProcessManageDlg::OnNtsdkillProcess()
+{
+	// TODO: 在此添加命令处理程序代码
+	pid = GetSelectPid();
+
+	STARTUPINFO si={sizeof(si)};
+	PROCESS_INFORMATION pi;
+
+	
+	TCHAR cmdline[MAX_PATH] =TEXT("ntsd.exe -c q -p ");
+	TCHAR BuffA[20]={0};
+
+	wsprintf(BuffA,"%d",pid);
+
+	strcat_s(cmdline,BuffA);
+
+	CreateProcess(NULL,cmdline,NULL,NULL,FALSE,0,NULL,NULL,&si,&pi);
+
+	ShowProcess();
+
 }

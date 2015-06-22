@@ -198,6 +198,7 @@ BEGIN
             MENUITEM "低",                           ID_Priority_LowLow
         END
         MENUITEM "结束进程",                        ID_Process_Terminate
+        MENUITEM "暴力关闭",                        ID_NTSDKill_Process
         MENUITEM "暂停进程",                        ID_Process_Pause
         MENUITEM "恢复进程",                        ID_Process_Resume
         MENUITEM SEPARATOR
