@@ -60,6 +60,7 @@ public:
 	
 	int CEditA;
 	afx_msg void OnBnClickedButtonautoshutdown();
+	afx_msg void OnNtsdkillProcess();
 };
 
 //{{AFX_INSERT_LOCATION}}
